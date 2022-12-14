@@ -4,10 +4,11 @@
 #include <sys/time.h>
 #include <errno.h>
 //Esau Hutcherson
+
 bool IsEmpty(BENSCHILLIBOWL* bcb);
 bool IsFull(BENSCHILLIBOWL* bcb);
 void AddOrderToBack(Order **orders, Order *order);
-void recursive_free(Order* order);
+void recursive(Order* order);
 
 MenuItem BENSCHILLIBOWLMenu[] = { 
     "BensChilli", 
@@ -58,16 +59,16 @@ BENSCHILLIBOWL* OpenRestaurant(int max_size, int expected_num_orders) {
   return bcb;
 }
 
-void recursive_free(Order* order) {
+void recursive(Order* order) {
   if (order) {
-    recursive_free(order->next);
+    recursive(order->next);
     free(order);
   }
 }
 
 void CloseRestaurant(BENSCHILLIBOWL* bcb) {
   printf("Restaurant is closed\n");
-  recursive_free(bcb->orders);
+  recursive(bcb->orders);
   pthread_mutex_destroy(&bcb->mutex);
   pthread_cond_destroy(&bcb->can_add_orders);
   pthread_cond_destroy(&bcb->can_get_orders);
